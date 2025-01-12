@@ -1,0 +1,37 @@
+stages:
+  - staging
+  - production
+before_script:
+  - source ~/.nvm/nvm.sh
+  - nvm use
+  - npm ci
+
+staging:
+  stage: staging
+  tags:
+    - games.runner
+  only:
+    - staging
+  environment:
+    name: staging
+  script:
+    - npm run build
+    - sudo mkdir -p /var/www/tanks
+    - sudo rm -rf /var/www/tanks/*
+    - sudo cp -rf dist/. /var/www/tanks
+    - sudo rm -rf *
+
+production:
+  stage: production
+  tags:
+    - games.runner
+  only:
+    - production
+  environment:
+    name: production
+  script:
+    - npm run build
+    - sudo mkdir -p /var/www/tanks
+    - sudo rm -rf /var/www/tanks/*
+    - sudo cp -rf dist/. /var/www/tanks
+    - sudo rm -rf *
